@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { User } from '../../entities/User';
 import { Roles } from '../../enums/Roles';
@@ -12,10 +12,4 @@ export class UpdateUserRequest implements QueryDeepPartialEntity<User> {
 
   @IsEnum(Roles)
   readonly role: Roles;
-
-  @IsBoolean()
-  readonly confirmed: boolean;
-
-  @IsBoolean()
-  readonly banned: boolean;
 }
