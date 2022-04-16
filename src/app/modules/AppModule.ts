@@ -4,12 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from '../exceptions/AllExceptionsFilter';
 import { UserModule } from './UserModule';
+import { AuthModule } from './AuthModule';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(),
     UserModule,
+    AuthModule
   ],
   providers: [
     {
