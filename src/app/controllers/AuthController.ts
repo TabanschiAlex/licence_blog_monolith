@@ -1,4 +1,4 @@
-import { Body, Controller,  Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from '../services/AuthService';
 import { AuthResource } from '../resources/auth/AuthResource';
 import { AuthRegisterRequest } from '../requests/auth/AuthRegisterRequest';

@@ -9,4 +9,3 @@ export class AuthLoginRequest {
   @IsString()
   readonly password: string;
 }
-

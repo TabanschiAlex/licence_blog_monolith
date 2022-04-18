@@ -1,5 +1,7 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Roles } from '../enums/Roles';
+import { Article } from './Article';
+import { Review } from './Review';
 
 @Entity('users')
 export class User {
@@ -18,11 +20,11 @@ export class User {
   @Column({ type: 'enum', enum: Roles, default: Roles.USER })
   role: Roles;
 
-  /*@OneToMany(() => Review, (reviews) => reviews.user)
-  reviews: Review[];*/
+  @OneToMany(() => Review, (reviews) => reviews.user)
+  reviews: Review[];
 
-  /*@OneToMany(() => Post, (posts) => posts.user)
-  posts: Post[];*/
+  @OneToMany(() => Article, (articles) => articles.user)
+  articles: Article[];
 
   @CreateDateColumn({ name: 'created_at', nullable: true })
   createdAt: Date;
