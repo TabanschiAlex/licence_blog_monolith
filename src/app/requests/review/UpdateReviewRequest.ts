@@ -1,1 +1,3 @@
-export class UpdateReviewRequest {}
+export class UpdateReviewRequest {
+  readonly text: string;
+}
