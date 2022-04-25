@@ -1,12 +1,27 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Res,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from '../services/UserService';
 import { CreateUserRequest } from '../requests/user/CreateUserRequest';
 import { UpdateUserRequest } from '../requests/user/UpdateUserRequest';
 import { UserResource } from '../resources/user/UserResource';
 import { JwtAuthGuard } from '../guards/JwtAuthGuard';
+import { UserDTO } from '../dto/user/UserDTO';
 
 @UseGuards(JwtAuthGuard)
+@UsePipes(ValidationPipe)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -22,7 +37,7 @@ export class UserController {
   }
 
   @Post()
-  public async store(@Body() userDto: CreateUserRequest) {
+  public async store(@Body(UserDTO) userDto: CreateUserRequest) {
     return UserResource.one(await this.userService.storeUser(userDto));
   }
 

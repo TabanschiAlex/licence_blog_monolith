@@ -5,20 +5,28 @@ import { User } from '../entities/User';
 import { CreateUserRequest } from '../requests/user/CreateUserRequest';
 import { BasicQueryRequest } from '../requests/BasicQueryRequest';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
   public async getAllUsers(query: BasicQueryRequest): Promise<User[]> {
-    const skip = query.page ? (query.page.number - 1) * query.page.number : 0;
-    const take = query.page.size ?? 10;
+    const skip = query?.page ? (query?.page?.number - 1) * query?.page?.number : 0;
+    const take = query?.page?.size ?? 10;
 
     return await this.userRepository.find({ skip, take });
   }
 
   public async storeUser(request: CreateUserRequest): Promise<User> {
-    return await this.userRepository.save(request);
+    const user = new User();
+
+    user.email = request.email;
+    user.password = await this.hashPassword(request.password);
+    user.role = request.role;
+    user.name = request.name;
+
+    return await this.userRepository.save(user);
   }
 
   public async updateUser(uuid: string, request: QueryDeepPartialEntity<User>): Promise<UpdateResult> {
@@ -37,5 +45,9 @@ export class UserService {
 
   public async getUserByUuid(uuid: string): Promise<User> {
     return await this.userRepository.findOneOrFail({ where: { uuid: uuid } });
+  }
+
+  public async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
   }
 }

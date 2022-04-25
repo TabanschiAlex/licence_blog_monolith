@@ -7,7 +7,7 @@ export class ArticleResource {
       title: article.title,
       description: article.description,
       text: article.text,
-      user_uuid: article.user.uuid,
+      user: article.user,
       createdAt: article.createdAt,
       updatedAt: article.updatedAt,
     };

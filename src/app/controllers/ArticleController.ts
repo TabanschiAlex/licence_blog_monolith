@@ -1,10 +1,24 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { CreateArticleRequest } from '../requests/article/CreateArticleRequest';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query, Req,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { ArticleRequest } from '../requests/article/ArticleRequest';
 import { ArticleService } from '../services/ArticleService';
-import { UpdateArticleRequest } from '../requests/article/UpdateArticleRequest';
 import { ArticleResource } from '../resources/article/ArticleResource';
+import { JwtAuthGuard } from '../guards/JwtAuthGuard';
+import { ArticleDTO } from '../dto/article/ArticleDTO';
 
-@Controller('posts')
+@Controller('articles')
+@UsePipes(ValidationPipe)
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
@@ -19,18 +33,21 @@ export class ArticleController {
   }
 
   @Post()
-  public async store(@Body() request: CreateArticleRequest): Promise<ArticleResource> {
-    return ArticleResource.one(await this.articleService.store(request));
+  @UseGuards(JwtAuthGuard)
+  public async store(@Body(ArticleDTO) request: ArticleRequest, @Req() req): Promise<ArticleResource> {
+    return ArticleResource.one(await this.articleService.store(request, req.user));
   }
 
   @Put(':id')
-  public async update(@Param('id') id: string, @Body() request: UpdateArticleRequest): Promise<string> {
+  @UseGuards(JwtAuthGuard)
+  public async update(@Param('id') id: string, @Body(ArticleDTO) request: ArticleRequest): Promise<string> {
     await this.articleService.update(id, request);
 
     return 'Updated';
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   public async destroy(@Param('id') id: string): Promise<string> {
     await this.articleService.delete(id);
 

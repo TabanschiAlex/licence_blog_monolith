@@ -1,1 +1,6 @@
-export class CreateReviewRequest {}
+export class CreateReviewRequest {
+  text: string;
+
+  article: number;
+
+}

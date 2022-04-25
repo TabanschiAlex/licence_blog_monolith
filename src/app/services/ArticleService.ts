@@ -4,15 +4,16 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Article } from '../entities/Article';
 import { BasicQueryRequest } from '../requests/BasicQueryRequest';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { CreateArticleRequest } from '../requests/article/CreateArticleRequest';
+import { ArticleRequest } from '../requests/article/ArticleRequest';
+import { User } from '../entities/User';
 
 @Injectable()
 export class ArticleService {
   constructor(@InjectRepository(Article) private readonly articleRepository: Repository<Article>) {}
 
   public async getAll(query: BasicQueryRequest): Promise<Article[]> {
-    const skip = query.page ? (query.page.number - 1) * query.page.number : 0;
-    const take = query.page.size ?? 10;
+    const skip = query?.page ? (query?.page?.number - 1) * query?.page?.number : 0;
+    const take = query?.page?.size ?? 10;
 
     return await this.articleRepository.find({ skip, take });
   }
@@ -21,7 +22,14 @@ export class ArticleService {
     return this.articleRepository.findOneOrFail(id);
   }
 
-  public async store(request: CreateArticleRequest): Promise<Article> {
+  public async store(request: ArticleRequest, user: User): Promise<Article> {
+    const article = new Article();
+
+    article.title = request.title;
+    article.description = request.description;
+    article.text = request.text;
+    article.user = user;
+
     return await this.articleRepository.save(request);
   }
 

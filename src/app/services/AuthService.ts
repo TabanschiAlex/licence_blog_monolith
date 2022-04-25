@@ -17,12 +17,12 @@ export class AuthService {
 
   public async register(request: AuthRegisterRequest): Promise<AuthResource> {
     if (await this.userService.getUserByEmail(request.email)) {
-      throw new UnprocessableEntityException();
+      throw new UnprocessableEntityException('Email already registered!');
     }
 
     AuthService.checkPasswordsIdentity(request.password, request.passwordConfirmation);
 
-    const hashedPassword = await AuthService.hashPassword(request.password);
+    const hashedPassword = await this.userService.hashPassword(request.password);
     const user = await this.userService.storeUser({
       ...request,
       password: hashedPassword,
@@ -35,10 +35,6 @@ export class AuthService {
     if (password !== passwordConfirmation) {
       throw new UnprocessableEntityException('Password does not match');
     }
-  }
-
-  private static async hashPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, 10);
   }
 
   private async generateToken(user: User): Promise<AuthResource> {
