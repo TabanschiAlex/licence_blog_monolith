@@ -16,14 +16,14 @@ export class ReviewService {
   ) {}
 
   public async getAll(query: BasicQueryRequest): Promise<Review[]> {
-    const skip = query.page ? (query.page.number - 1) * query.page.number : 0;
-    const take = query.page.size ?? 10;
+    const skip = query?.page ? (query?.page?.number - 1) * query?.page?.number : 0;
+    const take = query?.page?.size ?? 10;
 
-    return await this.reviewRepository.find({ skip, take });
+    return await this.reviewRepository.find({ skip, take, loadEagerRelations: true, relations: ['article', 'user'] });
   }
 
   public async getOne(id: string): Promise<Review> {
-    return await this.reviewRepository.findOneOrFail(id);
+    return await this.reviewRepository.findOneOrFail(id, { loadEagerRelations: true, relations: ['article', 'user'] });
   }
 
   public async store(request: CreateReviewRequest, user: User): Promise<Review> {

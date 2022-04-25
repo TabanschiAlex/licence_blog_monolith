@@ -1,4 +1,5 @@
 import { Article } from '../../entities/Article';
+import { ReviewResource } from '../review/ReviewResource';
 
 export class ArticleResource {
   public static one(article: Article) {
@@ -15,7 +16,7 @@ export class ArticleResource {
 
   public static withReviews(article: Article) {
     const oneArticle: any = this.one(article);
-    oneArticle.reviews = article.reviews;
+    oneArticle.reviews = ReviewResource.factory(article.reviews);
 
     return oneArticle;
   }

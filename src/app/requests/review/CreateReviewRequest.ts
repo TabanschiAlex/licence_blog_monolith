@@ -1,5 +1,5 @@
 export class CreateReviewRequest {
-  text: string;
+  readonly text: string;
 
-  article: number;
+  readonly article: number;
 }

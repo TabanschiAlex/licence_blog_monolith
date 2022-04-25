@@ -19,7 +19,10 @@ export class ArticleService {
   }
 
   public async getOne(id: string): Promise<Article> {
-    return this.articleRepository.findOneOrFail(id);
+    return this.articleRepository.findOneOrFail(id, {
+      loadEagerRelations: true,
+      relations: ['reviews', 'reviews.user'],
+    });
   }
 
   public async store(request: ArticleRequest, user: User): Promise<Article> {
