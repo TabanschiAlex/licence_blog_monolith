@@ -8,7 +8,7 @@ export class UserDTO implements PipeTransform {
       name: user.name ?? null,
       role: user.role ?? Roles.USER,
       email: user.email,
-      password: user.password
+      password: user.password,
     };
   }
 }
