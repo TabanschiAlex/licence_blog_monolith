@@ -4,44 +4,47 @@ export class createReviewTable1650971550804 implements MigrationInterface {
   private readonly table = 'reviews';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createTable(new Table({
-      name: this.table,
-      foreignKeys: [
-        new TableForeignKey({
-          columnNames: ['article_id'],
-          referencedColumnNames: ['id'],
-          referencedTableName: 'articles',
-          onDelete: 'CASCADE',
-        }),
-        new TableForeignKey({
-          columnNames: ['user_uuid'],
-          referencedColumnNames: ['uuid'],
-          referencedTableName: 'users',
-          onDelete: 'CASCADE',
-        }),
-      ],
-      columns: [
-        new TableColumn({
-          name: 'id',
-          type: 'int',
-          isPrimary: true,
-          generationStrategy: 'increment',
-          isGenerated: true,
-          unsigned: true,
-        }),
-        new TableColumn({ name: 'text', type: 'text' }),
-        new TableColumn({ name: 'article_id', type: 'int', isNullable: true, unsigned: true }),
-        new TableColumn({ name: 'user_uuid', type: 'uuid', isNullable: true }),
-        new TableColumn({ name: 'created_at', type: 'datetime', isNullable: true, default: 'current_timestamp(6)' }),
-        new TableColumn({
-          name: 'updated_at',
-          type: 'datetime',
-          isNullable: true,
-          default: 'current_timestamp(6)',
-          onUpdate: 'current_timestamp(6)',
-        }),
-      ],
-    }), true);
+    await queryRunner.createTable(
+      new Table({
+        name: this.table,
+        foreignKeys: [
+          new TableForeignKey({
+            columnNames: ['article_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'articles',
+            onDelete: 'CASCADE',
+          }),
+          new TableForeignKey({
+            columnNames: ['user_uuid'],
+            referencedColumnNames: ['uuid'],
+            referencedTableName: 'users',
+            onDelete: 'CASCADE',
+          }),
+        ],
+        columns: [
+          new TableColumn({
+            name: 'id',
+            type: 'int',
+            isPrimary: true,
+            generationStrategy: 'increment',
+            isGenerated: true,
+            unsigned: true,
+          }),
+          new TableColumn({ name: 'text', type: 'text' }),
+          new TableColumn({ name: 'article_id', type: 'int', isNullable: true, unsigned: true }),
+          new TableColumn({ name: 'user_uuid', type: 'uuid', isNullable: true }),
+          new TableColumn({ name: 'created_at', type: 'datetime', isNullable: true, default: 'current_timestamp(6)' }),
+          new TableColumn({
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: true,
+            default: 'current_timestamp(6)',
+            onUpdate: 'current_timestamp(6)',
+          }),
+        ],
+      }),
+      true,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

@@ -4,45 +4,47 @@ export class createArticleTable1650970824011 implements MigrationInterface {
   private readonly table = 'articles';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createTable(new Table({
-      name: this.table,
-      foreignKeys: [
-        new TableForeignKey({
-          columnNames: ['user_uuid'],
-          referencedColumnNames: ['uuid'],
-          referencedTableName: 'users',
-          onDelete: 'SET NULL',
-        }),
-      ],
-      columns: [
-        new TableColumn({
-          name: 'id',
-          type: 'int',
-          isPrimary: true,
-          generationStrategy: 'increment',
-          isGenerated: true,
-          unsigned: true,
-        }),
-        new TableColumn({ name: 'title', type: 'varchar', length: '150' }),
-        new TableColumn({ name: 'description', type: 'varchar', length: '255' }),
-        new TableColumn({ name: 'text', type: 'text' }),
-        new TableColumn({ name: 'user_uuid', type: 'uuid', isNullable: true }),
-        new TableColumn({ name: 'created_at', type: 'datetime', isNullable: true, default: 'current_timestamp(6)' }),
-        new TableColumn({
-          name: 'updated_at',
-          type: 'datetime',
-          isNullable: true,
-          default: 'current_timestamp(6)',
-          onUpdate: 'current_timestamp(6)',
-        }),
-      ],
-    }), true);
+    await queryRunner.createTable(
+      new Table({
+        name: this.table,
+        foreignKeys: [
+          new TableForeignKey({
+            columnNames: ['user_uuid'],
+            referencedColumnNames: ['uuid'],
+            referencedTableName: 'users',
+            onDelete: 'SET NULL',
+          }),
+        ],
+        columns: [
+          new TableColumn({
+            name: 'id',
+            type: 'int',
+            isPrimary: true,
+            generationStrategy: 'increment',
+            isGenerated: true,
+            unsigned: true,
+          }),
+          new TableColumn({ name: 'title', type: 'varchar', length: '150' }),
+          new TableColumn({ name: 'description', type: 'varchar', length: '255' }),
+          new TableColumn({ name: 'text', type: 'text' }),
+          new TableColumn({ name: 'user_uuid', type: 'uuid', isNullable: true }),
+          new TableColumn({ name: 'created_at', type: 'datetime', isNullable: true, default: 'current_timestamp(6)' }),
+          new TableColumn({
+            name: 'updated_at',
+            type: 'datetime',
+            isNullable: true,
+            default: 'current_timestamp(6)',
+            onUpdate: 'current_timestamp(6)',
+          }),
+        ],
+      }),
+      true,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable(this.table);
   }
-
 }
 
 /*
