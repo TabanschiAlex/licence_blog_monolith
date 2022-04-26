@@ -1,7 +1,7 @@
 import {
   Column,
   CreateDateColumn,
-  Entity,
+  Entity, JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -10,9 +10,9 @@ import {
 import { User } from './User';
 import { Review } from './Review';
 
-@Entity('posts')
+@Entity('articles')
 export class Article {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ unsigned: true, type: 'int' })
   id: number;
 
   @Column({ length: 150 })
@@ -24,7 +24,8 @@ export class Article {
   @Column({ type: 'text' })
   text: string;
 
-  @ManyToOne(() => User, (user) => user.articles)
+  @ManyToOne(() => User, (user) => user.articles, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'user_uuid' })
   user: User;
 
   @OneToMany(() => Review, (reviews) => reviews.article)

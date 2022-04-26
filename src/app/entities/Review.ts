@@ -1,19 +1,29 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from './User';
 import { Article } from './Article';
 
 @Entity('reviews')
 export class Review {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ unsigned: true, type: 'int' })
   id: number;
 
   @Column({ type: 'text' })
   text: string;
 
   @ManyToOne(() => User, (user) => user.reviews)
+  @JoinColumn({ name: 'user_uuid' })
   user: User;
 
   @ManyToOne(() => Article, (article) => article.reviews)
+  @JoinColumn({ name: 'article_id' })
   article: Article;
 
   @CreateDateColumn({ name: 'created_at', nullable: true })
