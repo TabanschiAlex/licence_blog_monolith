@@ -17,6 +17,7 @@ import { ArticleService } from '../services/ArticleService';
 import { ArticleResource } from '../resources/article/ArticleResource';
 import { JwtAuthGuard } from '../guards/JwtAuthGuard';
 import { ArticleDTO } from '../dto/article/ArticleDTO';
+import { UserRestrict } from '../guards/UserRestrict';
 
 @Controller('articles')
 @UsePipes(ValidationPipe)
@@ -36,12 +37,14 @@ export class ArticleController {
   @Post()
   @UseGuards(JwtAuthGuard)
   public async store(@Body(ArticleDTO) request: ArticleRequest, @Req() req): Promise<ArticleResource> {
+    UserRestrict.canAccess(req.user.role);
     return ArticleResource.one(await this.articleService.store(request, req.user));
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  public async update(@Param('id') id: string, @Body(ArticleDTO) request: ArticleRequest): Promise<string> {
+  public async update(@Param('id') id: string, @Body(ArticleDTO) request: ArticleRequest, @Req() req): Promise<string> {
+    UserRestrict.canAccess(req.user.role);
     await this.articleService.update(id, request);
 
     return 'Updated';
@@ -49,7 +52,8 @@ export class ArticleController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  public async destroy(@Param('id') id: string): Promise<string> {
+  public async destroy(@Param('id') id: string, @Req() req): Promise<string> {
+    UserRestrict.canAccess(req.user.role);
     await this.articleService.delete(id);
 
     return 'Deleted';

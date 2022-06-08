@@ -18,6 +18,7 @@ import { UpdateReviewRequest } from '../requests/review/UpdateReviewRequest';
 import { ReviewResource } from '../resources/review/ReviewResource';
 import { JwtAuthGuard } from '../guards/JwtAuthGuard';
 import { ReviewDTO } from '../dto/review/ReviewDTO';
+import { UserRestrict } from '../guards/UserRestrict';
 
 @Controller('reviews')
 @UsePipes(ValidationPipe)
@@ -42,16 +43,18 @@ export class ReviewController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  public async update(@Param('id') id: string, @Body() request: UpdateReviewRequest): Promise<string> {
-    await this.reviewService.update(id, request);
+  public async update(@Param('id') id: string, @Body() request: UpdateReviewRequest, @Req() req): Promise<string> {
+    const scope = UserRestrict.applyScopeWithCriteria(req.user, id);
+    await this.reviewService.update(scope.id, request, scope.uuid);
 
     return 'Updated';
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  public async destroy(@Param('id') id: string): Promise<string> {
-    await this.reviewService.delete(id);
+  public async destroy(@Param('id') id: string, @Req() req): Promise<string> {
+    const scope = UserRestrict.applyScopeWithCriteria(req.user, id);
+    await this.reviewService.delete(scope.id, scope.uuid);
 
     return 'Deleted';
   }

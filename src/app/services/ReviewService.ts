@@ -36,13 +36,23 @@ export class ReviewService {
     return await this.reviewRepository.save(review);
   }
 
-  public async update(id: string, request: QueryDeepPartialEntity<Review>): Promise<UpdateResult> {
+  public async update(id: string, request: QueryDeepPartialEntity<Review>, uuid?: string): Promise<UpdateResult> {
+    await this.getReviewOrFail(id, uuid);
+
     return await this.reviewRepository.update(id, request);
   }
 
-  public async delete(id: string): Promise<DeleteResult> {
-    await this.reviewRepository.findOneOrFail(id);
+  public async delete(id: string, uuid?: string): Promise<DeleteResult> {
+    await this.getReviewOrFail(id, uuid);
 
     return await this.reviewRepository.delete(id);
+  }
+
+  private async getReviewOrFail(id: string, uuid?: string) {
+    if (uuid) {
+      return await this.reviewRepository.findOneOrFail(id, { where: { user: uuid } });
+    }
+
+    return await this.reviewRepository.findOneOrFail(id);
   }
 }
